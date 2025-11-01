@@ -56,7 +56,10 @@
     <div class="chart-container"><canvas id="deficit"></canvas></div>
 
     <h2>Deuda Externa (% del PIB)</h2>
-    <div class="chart-container"><canvas id="deuda"></canvas></div>
+    <div class="chart-container"><canvas id="deuda_pct"></canvas></div>
+
+    <h2>Deuda Externa (USD bn)</h2>
+    <div class="chart-container"><canvas id="deuda_usd"></canvas></div>
 
   </div>
 
@@ -80,43 +83,57 @@
           return (val !== null && val !== undefined && !isNaN(val)) ? val : null;
         });
 
+        // Inflación
         new Chart(document.getElementById('inflacion'), {
           type: 'line',
           data: { labels: años, datasets: [{ label: 'Inflación (%)', data: getData('Inflación (%)'), borderColor: '#FF6384', fill: false, tension: 0.1 }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Inflación Anual 1970–2025' } } }
         });
 
+        // PIB
         new Chart(document.getElementById('pib'), {
           type: 'bar',
           data: { labels: años, datasets: [{ label: 'Crecimiento PIB (%)', data: getData('Crecimiento PIB (%)'), backgroundColor: '#36A2EB' }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Crecimiento del PIB 1970–2025' } } }
         });
 
+        // Desempleo
         new Chart(document.getElementById('desempleo'), {
           type: 'line',
           data: { labels: años, datasets: [{ label: 'Desempleo (%)', data: getData('Desempleo (%)'), borderColor: '#FFCE56', fill: true }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Tasa de Desempleo 1970–2025' } } }
         });
 
+        // Pobreza
         new Chart(document.getElementById('pobreza'), {
           type: 'line',
           data: { labels: años, datasets: [{ label: 'Pobreza (%)', data: getData('Pobreza (%)'), borderColor: '#4BC0C0', fill: true }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Tasa de Pobreza 1970–2025' } } }
         });
 
+        // Déficit Fiscal
         new Chart(document.getElementById('deficit'), {
           type: 'bar',
-          data: { labels: años, datasets: [{ label: 'Déficit (% PIB)', data: getData('Déficit Fiscal (% PIB)'), backgroundColor: (ctx) => {
-            const value = ctx.parsed.y;
-            return value < 0 ? '#FF6384' : '#00b300';
-          } }] },
+          data: { labels: años, datasets: [{ label: 'Déficit (% PIB)', data: getData('Déficit Fiscal (% PIB)'), backgroundColor: (ctx) => ctx.parsed.y < 0 ? '#FF6384' : '#00b300' }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Déficit Fiscal 1970–2025' } } }
         });
 
-        new Chart(document.getElementById('deuda'), {
+        // Deuda Externa (% PIB)
+        new Chart(document.getElementById('deuda_pct'), {
           type: 'line',
           data: { labels: años, datasets: [{ label: 'Deuda Externa (% PIB)', data: getData('Deuda Externa (% PIB)'), borderColor: '#9966FF', fill: true }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Deuda Externa (% del PIB) 1970–2025' } } }
+        });
+
+        // Deuda Externa (USD bn) - NUEVO
+        new Chart(document.getElementById('deuda_usd'), {
+          type: 'line',
+          data: { labels: años, datasets: [{ label: 'Deuda Externa (USD bn)', data: getData('Deuda Externa (USD bn)'), borderColor: '#FF9F40', fill: true, backgroundColor: 'rgba(255,159,64,0.2)' }] },
+          options: { 
+            responsive: true, 
+            plugins: { title: { display: true, text: 'Deuda Externa (USD miles de millones) 1970–2025' } },
+            scales: { y: { beginAtZero: true } }
+          }
         });
       })
       .catch(err => console.error('Error:', err));
