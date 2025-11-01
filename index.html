@@ -61,7 +61,7 @@
   </div>
 
   <footer>
-    Datos: INDEC, BCRA, Banco Mundial, CEDLAS | Actualizado: 31/10/2025 |
+    Datos: INDEC, BCRA, Banco Mundial, CEDLAS | Actualizado: 31/10/2025 | 
     <a href="https://datita.com.ar" style="color:var(--primary); font-weight:600;">datita.com.ar</a>
   </footer>
 
@@ -72,50 +72,54 @@
       .then(r => r.text())
       .then(text => {
         const data = Papa.parse(text, { header: true, dynamicTyping: true }).data;
-        const años = data.map(d => d.Año);
+        const validData = data.filter(row => row.Año !== null);
+        const años = validData.map(d => d.Año);
 
-        // === INFLACIÓN ===
-        new Chart(document.getElementById('inflacion'), {
-          type: 'line',
-          data: { labels: años, datasets: [{ label: 'Inflación (%)', data: data.map(d => d['Inflación (%)']), borderColor: '#FF6384', backgroundColor: 'rgba(255,99,132,0.2)', fill: false, tension: 0.1 }] },
-          options: { responsive: true, plugins: { title: { display: true, text: 'Inflación Anual 1970–2025' } }, scales: { y: { beginAtZero: false } } }
+        const getData = (key) => validData.map(d => {
+          const val = d[key];
+          return (val !== null && val !== undefined && !isNaN(val)) ? val : null;
         });
 
-        // === PIB ===
+        new Chart(document.getElementById('inflacion'), {
+          type: 'line',
+          data: { labels: años, datasets: [{ label: 'Inflación (%)', data: getData('Inflación (%)'), borderColor: '#FF6384', fill: false, tension: 0.1 }] },
+          options: { responsive: true, plugins: { title: { display: true, text: 'Inflación Anual 1970–2025' } } }
+        });
+
         new Chart(document.getElementById('pib'), {
           type: 'bar',
-          data: { labels: años, datasets: [{ label: 'Crecimiento PIB (%)', data: data.map(d => d['Crecimiento PIB (%)']), backgroundColor: '#36A2EB' }] },
+          data: { labels: años, datasets: [{ label: 'Crecimiento PIB (%)', data: getData('Crecimiento PIB (%)'), backgroundColor: '#36A2EB' }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Crecimiento del PIB 1970–2025' } } }
         });
 
-        // === DESEMPLEO ===
         new Chart(document.getElementById('desempleo'), {
           type: 'line',
-          data: { labels: años, datasets: [{ label: 'Desempleo (%)', data: data.map(d => d['Desempleo (%)']), borderColor: '#FFCE56', backgroundColor: 'rgba(255,206,86,0.2)', fill: true }] },
+          data: { labels: años, datasets: [{ label: 'Desempleo (%)', data: getData('Desempleo (%)'), borderColor: '#FFCE56', fill: true }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Tasa de Desempleo 1970–2025' } } }
         });
 
-        // === POBREZA ===
         new Chart(document.getElementById('pobreza'), {
           type: 'line',
-          data: { labels: años, datasets: [{ label: 'Pobreza (%)', data: data.map(d => d['Pobreza (%)']), borderColor: '#4BC0C0', backgroundColor: 'rgba(75,192,192,0.2)', fill: true }] },
+          data: { labels: años, datasets: [{ label: 'Pobreza (%)', data: getData('Pobreza (%)'), borderColor: '#4BC0C0', fill: true }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Tasa de Pobreza 1970–2025' } } }
         });
 
-        // === DÉFICIT ===
         new Chart(document.getElementById('deficit'), {
           type: 'bar',
-          data: { labels: años, datasets: [{ label: 'Déficit (% PIB)', data: data.map(d => d['Déficit Fiscal (% PIB)']), backgroundColor: d => d < 0 ? '#FF6384' : '#00b300' }] },
+          data: { labels: años, datasets: [{ label: 'Déficit (% PIB)', data: getData('Déficit Fiscal (% PIB)'), backgroundColor: (ctx) => {
+            const value = ctx.parsed.y;
+            return value < 0 ? '#FF6384' : '#00b300';
+          } }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Déficit Fiscal 1970–2025' } } }
         });
 
-        // === DEUDA ===
         new Chart(document.getElementById('deuda'), {
           type: 'line',
-          data: { labels: años, datasets: [{ label: 'Deuda Externa (% PIB)', data: data.map(d => d['Deuda Externa (% PIB)']), borderColor: '#9966FF', backgroundColor: 'rgba(153,102,255,0.2)', fill: true }] },
+          data: { labels: años, datasets: [{ label: 'Deuda Externa (% PIB)', data: getData('Deuda Externa (% PIB)'), borderColor: '#9966FF', fill: true }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Deuda Externa (% del PIB) 1970–2025' } } }
         });
-      });
+      })
+      .catch(err => console.error('Error:', err));
   </script>
 
 </body>
