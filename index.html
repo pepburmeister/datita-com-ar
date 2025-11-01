@@ -4,30 +4,115 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Datita.com.ar - ¿Funciona el plan Milei?</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
   <style>
-    :root { --primary: #1a1a1a; --accent: #00b300; --bg: #f8f9fa; }
+    :root {
+      --bg: #f9fafb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --accent: #10b981;
+      --light: #f3f4f6;
+      --border: #e5e7eb;
+    }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Inter', sans-serif; background:var(--bg); color:var(--primary); line-height:1.6; }
-    header { background:var(--primary); color:white; text-align:center; padding:2.5rem 1rem; }
-    .container { max-width:1100px; margin:0 auto; padding:1.5rem; }
-    h1 { font-size:2.4rem; margin-bottom:0.5rem; }
-    h2 { color:var(--primary); border-bottom:2px solid var(--accent); padding-bottom:0.5rem; margin:2.5rem 0 1.5rem; font-size:1.4rem; }
-    .chart-container { background:white; border-radius:12px; padding:1.5rem; margin-bottom:2rem; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
-    canvas { max-height:400px; }
-    .highlight { background:#fff8e1; padding:1.2rem; border-radius:10px; margin:1.5rem 0; font-weight:600; text-align:center; }
-    .badge { background:var(--accent); color:white; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; margin:0.3rem; display:inline-block; }
-    footer { text-align:center; padding:2rem; font-size:0.9rem; color:#666; border-top:1px solid #eee; margin-top:3rem; }
-    @media (max-width:768px) { h1 { font-size:1.8rem; } .chart-container { padding:1rem; } }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(to bottom, #f0fdf4, var(--bg));
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #065f46;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #059669;
+      font-weight: 500;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .highlight {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      font-weight: 600;
+      color: #065f46;
+    }
+    .badge {
+      background: var(--accent);
+      color: white;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      margin: 0.3rem;
+      display: inline-block;
+    }
+    h2 {
+      color: #065f46;
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #d1fae5;
+      font-weight: 600;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .chart-container {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+    canvas {
+      max-height: 320px;
+      border-radius: 8px;
+    }
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: #6b7280;
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    footer a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    @media (max-width: 992px) {
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 2rem; }
+      canvas { max-height: 280px; }
+    }
   </style>
 </head>
 <body>
 
   <header>
     <h1>Datita.com.ar</h1>
-    <p>Datos reales de Argentina (1970–2025) | ¿Funciona el plan Milei?</p>
+    <p class="subtitle">¿Funciona el plan Milei? | 1970–2025</p>
   </header>
 
   <div class="container">
@@ -40,32 +125,56 @@
       <span class="badge">Deuda: 45.3% → 40%</span>
     </div>
 
-    <h2>Inflación Anual (%)</h2>
-    <div class="chart-container"><canvas id="inflacion"></canvas></div>
+    <!-- FILA 1 -->
+    <div class="grid">
+      <div>
+        <h2>Inflación Anual (%)</h2>
+        <div class="chart-container"><canvas id="inflacion"></canvas></div>
+      </div>
+      <div>
+        <h2>Crecimiento del PIB (%)</h2>
+        <div class="chart-container"><canvas id="pib"></canvas></div>
+      </div>
+    </div>
 
-    <h2>Crecimiento del PIB (%)</h2>
-    <div class="chart-container"><canvas id="pib"></canvas></div>
+    <!-- FILA 2 -->
+    <div class="grid">
+      <div>
+        <h2>Tasa de Desempleo (%)</h2>
+        <div class="chart-container"><canvas id="desempleo"></canvas></div>
+      </div>
+      <div>
+        <h2>Tasa de Pobreza (%)</h2>
+        <div class="chart-container"><canvas id="pobreza"></canvas></div>
+      </div>
+    </div>
 
-    <h2>Tasa de Desempleo (%)</h2>
-    <div class="chart-container"><canvas id="desempleo"></canvas></div>
+    <!-- FILA 3 -->
+    <div class="grid">
+      <div>
+        <h2>Déficit Fiscal (% del PIB)</h2>
+        <div class="chart-container"><canvas id="deficit"></canvas></div>
+      </div>
+      <div>
+        <h2>Deuda Externa (% del PIB)</h2>
+        <div class="chart-container"><canvas id="deuda_pct"></canvas></div>
+      </div>
+    </div>
 
-    <h2>Tasa de Pobreza (%)</h2>
-    <div class="chart-container"><canvas id="pobreza"></canvas></div>
-
-    <h2>Déficit Fiscal (% del PIB)</h2>
-    <div class="chart-container"><canvas id="deficit"></canvas></div>
-
-    <h2>Deuda Externa (% del PIB)</h2>
-    <div class="chart-container"><canvas id="deuda_pct"></canvas></div>
-
-    <h2>Deuda Externa (USD bn)</h2>
-    <div class="chart-container"><canvas id="deuda_usd"></canvas></div>
+    <!-- FILA 4 (solo uno) -->
+    <div class="grid" style="grid-template-columns: 1fr;">
+      <div>
+        <h2>Deuda Externa (USD miles de millones)</h2>
+        <div class="chart-container"><canvas id="deuda_usd"></canvas></div>
+      </div>
+    </div>
 
   </div>
 
   <footer>
-    Datos: INDEC, BCRA, Banco Mundial, CEDLAS | Actualizado: 31/10/2025 | 
-    <a href="https://datita.com.ar" style="color:var(--primary); font-weight:600;">datita.com.ar</a>
+    Fuentes: INDEC, BCRA, Ministerio de Economía, Banco Mundial, FMI, CEDLAS | 
+    Datos actualizados al 31/10/2025 | 
+    <a href="https://datita.com.ar">datita.com.ar</a>
   </footer>
 
   <script>
@@ -83,60 +192,30 @@
           return (val !== null && val !== undefined && !isNaN(val)) ? val : null;
         });
 
-        // Inflación
-        new Chart(document.getElementById('inflacion'), {
-          type: 'line',
-          data: { labels: años, datasets: [{ label: 'Inflación (%)', data: getData('Inflación (%)'), borderColor: '#FF6384', fill: false, tension: 0.1 }] },
-          options: { responsive: true, plugins: { title: { display: true, text: 'Inflación Anual 1970–2025' } } }
+        const chartConfig = (id, type, label, dataKey, color, fill = false) => ({
+          type,
+          data: { labels: años, datasets: [{ label, data: getData(dataKey), borderColor: color, backgroundColor: fill ? `${color}20` : color, fill }] },
+          options: {
+            responsive: true,
+            plugins: { title: { display: true, text: label + ' 1970–2025', font: { size: 14, weight: '600' } } },
+            scales: { y: { beginAtZero: type === 'bar' } }
+          }
         });
 
-        // PIB
-        new Chart(document.getElementById('pib'), {
-          type: 'bar',
-          data: { labels: años, datasets: [{ label: 'Crecimiento PIB (%)', data: getData('Crecimiento PIB (%)'), backgroundColor: '#36A2EB' }] },
-          options: { responsive: true, plugins: { title: { display: true, text: 'Crecimiento del PIB 1970–2025' } } }
-        });
-
-        // Desempleo
-        new Chart(document.getElementById('desempleo'), {
-          type: 'line',
-          data: { labels: años, datasets: [{ label: 'Desempleo (%)', data: getData('Desempleo (%)'), borderColor: '#FFCE56', fill: true }] },
-          options: { responsive: true, plugins: { title: { display: true, text: 'Tasa de Desempleo 1970–2025' } } }
-        });
-
-        // Pobreza
-        new Chart(document.getElementById('pobreza'), {
-          type: 'line',
-          data: { labels: años, datasets: [{ label: 'Pobreza (%)', data: getData('Pobreza (%)'), borderColor: '#4BC0C0', fill: true }] },
-          options: { responsive: true, plugins: { title: { display: true, text: 'Tasa de Pobreza 1970–2025' } } }
-        });
-
-        // Déficit Fiscal
+        new Chart(document.getElementById('inflacion'), chartConfig('inflacion', 'line', 'Inflación (%)', 'Inflación (%)', '#ef4444'));
+        new Chart(document.getElementById('pib'), chartConfig('pib', 'bar', 'Crecimiento PIB (%)', 'Crecimiento PIB (%)', '#3b82f6'));
+        new Chart(document.getElementById('desempleo'), chartConfig('desempleo', 'line', 'Desempleo (%)', 'Desempleo (%)', '#f59e0b', true));
+        new Chart(document.getElementById('pobreza'), chartConfig('pobreza', 'line', 'Pobreza (%)', 'Pobreza (%)', '#10b981', true));
+        
         new Chart(document.getElementById('deficit'), {
           type: 'bar',
-          data: { labels: años, datasets: [{ label: 'Déficit (% PIB)', data: getData('Déficit Fiscal (% PIB)'), backgroundColor: (ctx) => ctx.parsed.y < 0 ? '#FF6384' : '#00b300' }] },
+          data: { labels: años, datasets: [{ label: 'Déficit (% PIB)', data: getData('Déficit Fiscal (% PIB)'), backgroundColor: ctx => ctx.parsed.y < 0 ? '#ef4444' : '#10b981' }] },
           options: { responsive: true, plugins: { title: { display: true, text: 'Déficit Fiscal 1970–2025' } } }
         });
 
-        // Deuda Externa (% PIB)
-        new Chart(document.getElementById('deuda_pct'), {
-          type: 'line',
-          data: { labels: años, datasets: [{ label: 'Deuda Externa (% PIB)', data: getData('Deuda Externa (% PIB)'), borderColor: '#9966FF', fill: true }] },
-          options: { responsive: true, plugins: { title: { display: true, text: 'Deuda Externa (% del PIB) 1970–2025' } } }
-        });
-
-        // Deuda Externa (USD bn) - NUEVO
-        new Chart(document.getElementById('deuda_usd'), {
-          type: 'line',
-          data: { labels: años, datasets: [{ label: 'Deuda Externa (USD bn)', data: getData('Deuda Externa (USD bn)'), borderColor: '#FF9F40', fill: true, backgroundColor: 'rgba(255,159,64,0.2)' }] },
-          options: { 
-            responsive: true, 
-            plugins: { title: { display: true, text: 'Deuda Externa (USD miles de millones) 1970–2025' } },
-            scales: { y: { beginAtZero: true } }
-          }
-        });
-      })
-      .catch(err => console.error('Error:', err));
+        new Chart(document.getElementById('deuda_pct'), chartConfig('deuda_pct', 'line', 'Deuda Externa (% PIB)', 'Deuda Externa (% PIB)', '#8b5cf6', true));
+        new Chart(document.getElementById('deuda_usd'), chartConfig('deuda_usd', 'line', 'Deuda Externa (USD bn)', 'Deuda Externa (USD bn)', '#f97316', true));
+      });
   </script>
 
 </body>
